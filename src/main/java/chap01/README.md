@@ -45,3 +45,32 @@ public class AppMain {
 > 아래처럼 Intellij Gradle 구성을 변경하여 실행한다.
 ![image](https://user-images.githubusercontent.com/1131775/198498634-56b738f0-9de0-41a2-a765-df6674fe2478.png)
 
+
+## 라이브러리 살펴보기
+*****
+
+> Gradle은 의존관계가 있는 라이브러리를 함께 다운로드 한다.
+
+#### 스프링 부트 라이브러리
+* spring-boot-starter-web 
+  * spring-boot-starter-tomcat: 톰캣 (웹서버) 
+  * spring-webmvc: 스프링 웹 MVC 
+* spring-boot-starter-thymeleaf: 타임리프 템플릿 엔진(View) 
+* spring-boot-starter(공통): 스프링 부트 + 스프링 코어 + 로깅 
+  * spring-boot 
+    * spring-core 
+  * spring-boot-starter-logging 
+    * logback, slf4j
+    
+
+#### 테스트 라이브러리
+* spring-boot-starter-test 
+  * junit: 테스트 프레임워크 
+  * mockito: 목 라이브러리 
+  * assertj: 테스트 코드를 좀 더 편하게 작성하게 도와주는 라이브러리 
+  * spring-test: 스프링 통합 테스트 지원
+
+
+> <font style="color:#f2bc00">[NOTE] gradle 탭에서 의존 파일 확인</font></br>
+> <라이브러리>(\*) 에서 '(*)' 중복 제거 의미 (그래이들 관리)</br>
+> ![image](https://user-images.githubusercontent.com/1131775/198501966-9c286c4b-3d44-4217-b6ed-3038a2b2df32.png)
