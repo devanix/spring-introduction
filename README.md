@@ -16,11 +16,11 @@
 
 | Chapter | Subject
 | ------- | ------- |
-| 세션 1  | [프로젝트 환경설정](chap01)
-| 세션 2  | [스프링 웹 개발 기초](chap02)
-| 세션 3 | [회원 관리 예제 - 백에드 개발](chap03)
-| 세션 4 | [스프링 빈과 의존관계](chap04)
-| 세션 5 | [회원 관리 예제 - 웹 MVC 개발](chap05)
-| 세션 6 | [스프링 DB 접근 기술](chap06)
-| 세션 7 | [AOP](chap07)
-| 세션 8 | [다음으로](chap08)
+| 세션 1  | [프로젝트 환경설정](src/main/java/chap01)
+| 세션 2  | [스프링 웹 개발 기초](src/main/java/chap02)
+| 세션 3 | [회원 관리 예제 - 백에드 개발](src/main/java/chap03)
+| 세션 4 | [스프링 빈과 의존관계](src/main/java/chap04)
+| 세션 5 | [회원 관리 예제 - 웹 MVC 개발](src/main/java/chap05)
+| 세션 6 | [스프링 DB 접근 기술](src/main/java/chap06)
+| 세션 7 | [AOP](src/main/java/chap07)
+| 세션 8 | [다음으로](src/main/java/chap08)
