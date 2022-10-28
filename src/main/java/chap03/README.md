@@ -98,5 +98,90 @@ public class MemoryMemberRepository implements MemberRepository {
     public List<Member> findAll() {
         return new ArrayList<>(store.values());
     }
+
+    public void clearStore() {
+        store.clear();
+    }
 }
 ```
+
+## ⎕ 회원 리포지토리 테스트 케이스 작성
+```textmate
+개발한 기능을 실행해서 테스트 할 때 자바의 main 메서드를 통해서 실행하거나, 
+웹 애플리케이션의 컨트롤러를 통해서 해당 기능을 실행한다.
+이러한 방법은 준비하고 실행하는데 오래 걸리고, 
+반복 실행하기 어렵고 여러 테스트를 한번에 실행하기 어렵다는 단점이 있다. 
+자바는 JUnit이라는 프레임워크로 테스트를 실행해서 이러한 문제를 해결한다.
+```
+
+### ❍ 회원 리포지토리 메모리 구현체
+
+`src/test/java` 하위 폴더에 생성
+
+```java
+public class MemoryMemberRepositoryTest {
+
+    MemoryMemberRepository repository = new MemoryMemberRepository();
+
+    @AfterEach
+    public void afterEach() {
+        repository.clearStore();
+    }
+
+    @Test
+    public void save() {
+        Member member = new Member();
+        member.setName("spring");
+
+        repository.save(member);
+
+        Member result = repository.findById(member.getId()).get();
+        assertThat(member).isEqualTo(result);
+    }
+
+    @Test
+    public void findByName() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+
+        Member result = repository.findByName("spring1").get();
+
+        assertThat(result).isEqualTo(member1);
+    }
+
+    @Test
+    public void findAll() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+
+        List<Member> result = repository.findAll();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+}
+```
+
+* @AfterEach : 한번에 여러 테스트를 실행하면 메모리 DB에 직전 테스트의 결과가 남을 수 있다.<br> 
+이렇게 되면 다음 이전 테스트 때문에 다음 테스트가 실패할 가능성이 있다. <br>
+![image](https://user-images.githubusercontent.com/1131775/198704490-50c266d3-836d-4530-b2e7-27bf06f749cd.png)
+
+* @AfterEach 를 사용하면 각 테스트가 종료될 때 마다 이 기능을 실행한다. <br>
+여기서는 메모리 DB에 저장된 데이터를 삭제한다.<br>
+```java
+  @AfterEach
+  public void afterEach() {
+      repository.clearStore();
+  }
+```
+* 테스트는 각각 독립적으로 실행되어야 한다.<br>
+테스트 순서에 의존관계가 있는 것은 좋은 테스트가 아니다.<br>
