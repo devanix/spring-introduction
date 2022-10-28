@@ -36,3 +36,41 @@
 1) 내장 통켓 서버에서 스프링 컨테이너의 컨트롤러 확인<br>
 2) 리소스(resources)/static 확인
 
+
+## ⎕ MVC와 템플릿 엔진
+*****
+MVC: Model, View, Controller
+
+﹅ **Controller**</br>
+```java
+@Controller
+  public class HelloController {
+      @GetMapping("hello-mvc")
+      public String helloMvc(@RequestParam("name") String name, Model model) {
+          model.addAttribute("name", name);
+          return "hello-template";
+      }
+}
+```
+
+﹅ **View**</br>
+resources/templates/hello-template.html
+```html
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+  <p th:text="'hello ' + ${name}">hello! empty</p>
+  </body>
+</html>
+```
+
+﹅ **실행**</br>
+http://localhost:8080/hello-mvc?name=spring
+
+> <font style="color:#f2bc00">[NOTE] url에 name 파라미터가 없을 경우 에러 출력</font>
+> ```pycon
+> Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'name' for method parameter type String is not present]
+> ```
+
+﹅ **MVC, 템플릿 엔진 이미지**<br>
+<img width="951" alt="image" src="https://user-images.githubusercontent.com/1131775/198550257-951410d1-fb5f-43b7-90cf-cbc12931033c.png">
+
