@@ -152,3 +152,23 @@ public class AppMain {
 > **html** 파일을 컴파일만 해주면 서버 재시작 없이 View 파일 변경이 가능하다.</br>
 > `Intellij 컴파일 방법: 메뉴 build -> Recompile`
 
+## ⎕ 빌드하고 실행하기
+*****
+
+```shell
+╭━ 콘솔 실행
+┃ ./gradlew build
+┃ cd build/libs
+┃ java -jar spring-introduction-0.0.1-SNAPSHOT.jar
+╰━
+```
+
+**Intellij 빌드 및 실행**
+
+빌드
+
+![image](https://user-images.githubusercontent.com/1131775/198544835-f320b8a9-57b2-4c8d-8d8f-421603107ddc.png)
+
+실행
+
+![image](https://user-images.githubusercontent.com/1131775/198538618-766e0cf3-af39-4f65-ae93-be46bcc82229.png)
