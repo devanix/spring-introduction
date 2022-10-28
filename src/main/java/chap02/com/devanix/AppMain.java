@@ -1,4 +1,4 @@
-package chap02;
+package chap02.com.devanix;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
