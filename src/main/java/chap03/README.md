@@ -185,3 +185,59 @@ public class MemoryMemberRepositoryTest {
 ```
 * 테스트는 각각 독립적으로 실행되어야 한다.<br>
 테스트 순서에 의존관계가 있는 것은 좋은 테스트가 아니다.<br>
+
+
+## ⎕ 회원 서비스 개발
+
+```java
+public class MemberService {
+
+    private final MemberRepository memberRepository = new MemoryMemberRepository();
+
+    /**
+     * 회원 가입
+     * @param member
+     * @return
+     */
+    public Long join(Member member) {
+        validateDuplicateMember(member); // 중복 회원 검증
+
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+    /**
+     * 중복 이름 검증
+     * @param member
+     */
+    private void validateDuplicateMember(Member member) {
+        memberRepository.findByName(member.getName())
+                .ifPresent( m -> {
+                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                });
+    }
+
+    /**
+     * 전체 회원 조회
+     * @return
+     */
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
+    }
+
+
+    /**
+     * 회원 찾기
+     *  - 아이디로 하나의 회원 찾기
+     * @param memberId
+     * @return
+     */
+    public Optional<Member> findOne(Long memberId) {
+        return memberRepository.findById(memberId);
+    }
+}
+```
+
+> <span style="color:#f2bc00">[NOTE] 네이밍 </span><br>
+> * 서비스 클래스는 Join, findMembers와 같이 비즈니스와 같은 용어를 사용하는 것이 좋다.
+> * 리포지토리 클래스는 기계적으로 개발스럽게 용어들을 선택.
