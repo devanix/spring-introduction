@@ -19,6 +19,10 @@ repositories {
     mavenCentral()
 }
 
+springBoot {
+    mainClass = "chap01.com.devanix.AppMain"
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
