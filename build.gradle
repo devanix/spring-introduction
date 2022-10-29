@@ -20,7 +20,7 @@ repositories {
 }
 
 springBoot {
-    mainClass = "chap01.com.devanix.AppMain"
+    mainClass = "chap04.AppMain"
 }
 
 dependencies {
