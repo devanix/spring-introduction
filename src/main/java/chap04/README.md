@@ -94,3 +94,39 @@ public class MemoryMemberRepository implements MemberRepository {
 > 특별한 경우를 제외하면 대부분 싱글톤을 사용한다.
 
 
+## ⎕ 자바 코드로 직접 스프링 빈 등록하기
+*****
+
+* 회원 서비스와 회원 리포지토리의 @Service, @Repository, @Autowired 애노테이션을 제거하고 진행한다.
+
+```java
+@Configuration
+public class SpringConfig {
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+        return new MemoryMemberRepository();
+    }
+}
+```
+
+여기서는 향후 메모리 리포지토리를 다른 리포지토리로 변경할 예정이므로, <br>
+컴포넌트 스캔 방식 대신에 자바 코드로 스프링 빈을 설정하겠다.
+
+> <span style="color:#f2bc00">[NOTE] XML 설정 방식 </span><br>
+> 최근에는 잘 사용하지 않으므로 생략<br>
+
+> <span style="color:#f2bc00">[NOTE] DI 주입 방식</span><br>
+> DI에는 필드 주입, setter 주입, 생성자 주입 이렇게 3가지 방법이 있다. <br>
+> 의존관계가 실행중에 동적으로 변하는 경우는 거의 없으므로 생성자 주입을 권장한다.<br>
+
+> <span style="color:#f2bc00">[Warning] DI 주입 방식</span><br>
+> 주의: @Autowired 를 통한 DI는 helloController , memberService 등과 같이 스프링이 관리하는 객체에서만 동작한다. <br>
+> 스프링 빈으로 등록하지 않고 내가 직접 생성한 객체에서는 동작하지 않는다.<br>
+
+> 스프링 컨테이너, DI 관련된 자세한 내용은 스프링 핵심 원리 강의에서 설명한다.
