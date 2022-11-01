@@ -260,3 +260,63 @@ DataSource는 데이터베이스 커넥션을 획득할 때 사용하는 객체�
 * 스프링의 DI (Dependencies Injection)을 사용하면 기존 코드를 전혀 손대지 않고, 설정만으로 구현 클래스를 변경할 수 있다. 
 * 회원을 등록하고 DB에 결과가 잘 입력되는지 확인하자. 
 * 데이터를 DB에 저장하므로 스프링 서버를 다시 실행해도 데이터가 안전하게 저장된다.
+
+
+## ⎕ 스프링 통합 테스트
+스프링 컨테이너와 DB까지 연결한 통합 테스트를 진행해보자.
+
+### ❍ 회원 서비스 스프링 통합 테스트
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@SpringBootTest
+@Transactional
+public class MemberServiceIntegrationTest {
+
+  @Autowired
+  MemberService memberService;
+
+  @Autowired
+  MemberRepository memberRepository;
+
+  @Test
+  public void 회원가입() throws Exception {
+    // Given
+    Member member = new Member();
+    member.setName("devanix");
+
+    // when
+    Long saveId = memberService.join(member);
+
+    // Then
+    Member findMember = memberService.findOne(saveId).get();
+    assertEquals(member.getName(), findMember.getName());
+  }
+
+  @Test
+  public void 중복회원예외() {
+    // Given
+    Member member1 = new Member();
+    member1.setName("Luka");
+
+    Member member2 = new Member();
+    member2.setName("Luka");
+
+    // When
+    memberService.join(member1);
+    IllegalStateException e = assertThrows(IllegalStateException.class,
+            () -> memberService.join(member2));// 예외가 발생해야 한다.
+
+
+    assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+  }
+
+}
+```
+
+* <span style="color:#f2bc00">@SpringBootTest</span> : 스프링 컨테이너와 테스트를 함께 실행한다.
+* <span style="color:#f2bc00">@Transactional</span> : 테스트 케이스에 이 애노테이션이 있으면, <br>
+  테스트 시작 전에 트랜잭션을 시작하고, 테스트 완료 후에 항상 롤백한다. <br>
+  이렇게 하면 DB에 데이터가 남지 않으므로 다음 테스트에 영향을 주지 않는다.<br>
