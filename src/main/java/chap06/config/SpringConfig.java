@@ -1,6 +1,6 @@
 package chap06.config;
 
-import chap06.repository.JdbcMemberRepository;
+import chap06.repository.JdbcTemplateMemberRepository;
 import chap06.repository.MemberRepository;
 import chap06.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ public class SpringConfig {
     @Bean
     public MemberRepository memberRepository() {
 //        return new MemoryMemberRepository();
-        return new JdbcMemberRepository(datasource);
+//        return new JdbcMemberRepository(datasource);
+        return new JdbcTemplateMemberRepository(datasource);
     }
 }

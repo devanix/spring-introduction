@@ -320,3 +320,89 @@ public class MemberServiceIntegrationTest {
 * <span style="color:#f2bc00">@Transactional</span> : 테스트 케이스에 이 애노테이션이 있으면, <br>
   테스트 시작 전에 트랜잭션을 시작하고, 테스트 완료 후에 항상 롤백한다. <br>
   이렇게 하면 DB에 데이터가 남지 않으므로 다음 테스트에 영향을 주지 않는다.<br>
+
+## ⎕ 스프링 JdbcTemplate
+*****
+
+* 순수 Jdbc와 동일한 환경설정을 하면 된다.
+* 스프링 JdbcTemplate와 MyBatis 같은 라이브러리는 JDBC API에서 본 반복 코드를 대부분 제거해준다.<br>
+  하지만 SQL은 직접 작성해야한다.
+
+### ❍ 스프링 JdbcTemplate 회원 리포지토리
+
+```java
+public class JdbcTemplateMemberRepository implements MemberRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public JdbcTemplateMemberRepository(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Member save(Member member) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("member").usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", member.getName());
+
+        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+        member.setId(key.longValue());
+        return member;
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        List<Member> result = jdbcTemplate.query("select * from member where id = ?", memberRowMapper(), id);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public Optional<Member> findByName(String name) {
+        List<Member> result = jdbcTemplate.query("select * from member where name = ?", memberRowMapper(), name);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return jdbcTemplate.query("select * from member", memberRowMapper());
+    }
+
+    private RowMapper<Member> memberRowMapper() {
+        return (rs, rowNum) -> {
+            Member member = new Member();
+            member.setId(rs.getLong("id"));
+            member.setName(rs.getString("name"));
+            return member;
+        };
+    }
+}
+```
+
+### ❍ JdbcTemplate을 사용하도록 스프링 설정 변경
+```java
+@Configuration
+public class SpringConfig {
+
+    private DataSource datasource;
+
+    @Autowired
+    public SpringConfig(DataSource datasource) {
+        this.datasource = datasource;
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+//        return new MemoryMemberRepository();
+//        return new JdbcMemberRepository(datasource);
+        return new JdbcTemplateMemberRepository(datasource);
+    }
+}
+```
