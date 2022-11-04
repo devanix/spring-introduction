@@ -1,6 +1,7 @@
 package com.jwlim;
 
 import com.jwlim.repository.JdbcMemberRepository;
+import com.jwlim.repository.JdbcTemplateMemberRepository;
 import com.jwlim.repository.MemberRepository;
 import com.jwlim.repository.MemoryMemberRepository;
 import com.jwlim.service.MemberService;
@@ -27,7 +28,8 @@ public class SpringConfig {
 
     @Bean
     public MemberRepository memberRepository() {
-        return new JdbcMemberRepository(dataSource);
+//        return new JdbcMemberRepository(dataSource);
+        return new JdbcTemplateMemberRepository(dataSource);
 //        return new MemoryMemberRepository();
     }
 }
