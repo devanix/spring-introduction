@@ -24,11 +24,11 @@ class MemberServiceIntegrationTest {
     MemberRepository memberRepository;
 
     @Test
-    @Commit /** Transactional 애노테이션을 무시하고 커밋함. */
+//    @Commit /** Transactional 애노테이션을 무시하고 커밋함. */
     void 회원가입() {
         //given
         Member member = new Member();
-        member.setName("spring");
+        member.setName("spring5");
 
         //when
         Long saveId = memberService.join(member);
