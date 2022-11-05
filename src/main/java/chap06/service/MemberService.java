@@ -3,10 +3,12 @@ package chap06.service;
 
 import chap06.domain.Member;
 import chap06.repository.MemberRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
