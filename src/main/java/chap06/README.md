@@ -66,7 +66,7 @@ spring.datasource.username=sa
 ```
 
 > <span style="color:#f2bc00">[NOTE] </span><br>
-> 스프링부트 2.4부터는 spring.datasource.username=sa 를 꼭 추가(공백 주의)<br>
+> 스프링부트 2.4부터는 spring.datasource.username=sa 를 꼭 추가ㄷ(공백 주의)<br>
 > 그렇지 않으면 Wrong user name or password 오류가 발생<br>
 
 ### ❍ Jdbc 리포지토리 구현
@@ -561,3 +561,57 @@ public class SpringConfig {
   }
 }
 ```
+
+## ⎕ 스프링 데이터 JPA
+*****
+스프링 데이터 JPA를 사용하면, 기존의 한계를 넘어 마치 마법처럼, <br>
+리포지토리에 구현 클래스 없이 인터페이스 만으로 개발을 완료할 수 있습니다.<br> 
+그리고 반복 개발해온 기본 CRUD 기능도 스프링 데이터 JPA가 모두 제공합니다.<br>
+
+### 스프링 데이터 JPA 회원 리포지토리
+
+```java
+import java.util.Optional;
+
+public interface SpringDataJpaMemberRepository extends JpaRepository<Member, Long>, MemberRepository {
+    Optional<Member> findByName(String name);
+}
+```
+
+### 스프링 데이터 JPA 회원 리포지토리를 사용하도록 스프링 설정 변경
+```java
+@Configuration
+public class SpringConfig {
+
+    private MemberRepository memberRepository;
+
+    @Autowired
+    public SpringConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository);
+    }
+
+}
+```
+> 스프링 데이터 JPA가 SpringDataJpaMemberRepository 를 스프링 빈으로 자동 등록해준다.
+
+### 스프링 데이터 JPA 제공 클래스
+![image](https://user-images.githubusercontent.com/1131775/200109980-0130d23a-9518-4b25-a721-f9ff7746256d.png)
+
+
+### 스프링 데이터 JPA 제공 기능
+* 인터페이스를 통한 기본적인 CRUD 
+* findByName() , findByEmail() 처럼 메서드 이름 만으로 조회 기능 제공 
+* 페이징 기능 자동 제공
+
+> <span style="color:#f2bc00">[NOTE] </span><br>
+> 실무에서는 JPA와 스프링 데이터 JPA를 기본으로 사용하고, 
+> 복잡한 동적 쿼리는 Querydsl이라는 라이브러리를 사용하면 된다. 
+> Querydsl을 사용하면 쿼리도 자바 코드로 안전하게 작성할 수 있고, 
+> 동적 쿼리도 편리하게 작성할 수 있다. 
+> 이 조합으로 해결하기 어려운 쿼리는 JPA가 제공하는 네이티브 쿼리를 사용하거나, 
+> 앞서 학습한 스프링 JdbcTemplate를 사용하면 된다.
